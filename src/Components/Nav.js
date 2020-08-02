@@ -20,7 +20,7 @@ function Nav() {
         <SignIn_Modal ref={signInModalRef}/>
         <SignUp_Modal ref={signUpModalRef}/>
         <div className="nav">
-  <img src='./logo.png' className="logo"/>
+  <img src='/logo.png' className="logo"/>
   <span className="shopName">La Fresco</span>
 
 <div>
@@ -45,9 +45,9 @@ function Nav() {
 </div>
 
 <div className="others">
-  <a onClick={openLoginModal} className="login">Login</a>
+  <a onClick={openLoginModal} className="login">SignIn</a>
   <span className="vl"></span>
-  <a onClick={openSignupModal} className="sign">Sign Up</a>
+  <a onClick={openSignupModal} className="sign">SignUp</a>
 
   <div className="cart">
   <img src="https://image.flaticon.com/icons/svg/126/126083.svg" className="cartLogo"/>

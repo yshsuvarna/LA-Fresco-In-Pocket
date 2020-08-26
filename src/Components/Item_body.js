@@ -1,83 +1,242 @@
-
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import Card from './Item-card'
 import ScrollMenu from 'react-horizontal-scrolling-menu';
-import items from "./Item-data";
-import Card from './Item-card.js';
+import {Link} from 'react-router-dom';
+import Axios from 'axios';
+import './Comp-CSS/item-body.css';
+import Festive from './Comp-CSS/festive.jpg';
+import Frunveg from './Comp-CSS/frunveg.jpg';
+import Staples from './Comp-CSS/staples.jpg';
+import Snanam from './Comp-CSS/snanam.jpg';
+import Drinks from './Comp-CSS/drinks.jpg';
+import Cleaning from './Comp-CSS/cleaning.jpg';
+import Beauty from './Comp-CSS/beauty.jpg'
 
 
-// One item component
-// selected prop will be passed
+const list = [];
+ 
 const MenuItem = ({text, price, selected}) => {
-    return <div
-      className={`menu-item ${selected ? 'active' : ''}`}
-      ><div className="card"><Card name={text} price={price}/></div></div>;
-  };
-   
-  // All items component
-  // Important! add unique key
-  export const Menu = (items, selected) =>
-    items.map((el) => {
-      const {name} = el;
-      const {price} = el;
-      return <MenuItem text={name} price={price} key={name} selected={selected} />;
-    });
-   
-  const myStyle = {
-    color: "#000000",
-    backgroundColor: "#dddddd",
-    padding: "10px",
-    fontFamily: "Arial"
-    };
+  return <div
+    className={`menu-item ${selected ? 'active' : ''}`}
+    ><div className="card"><Card name={text} price = {price} /></div></div>;
+};
+ 
 
-  const Arrow = ({ text, myStyle }) => {
-    return (
-      <div
-        style={myStyle}
-      >{text}</div>
-    );
-  };
-   
-   
-  const ArrowLeft = Arrow({ text: '<', myStyle: myStyle });
-  const ArrowRight = Arrow({ text: '>', myStyle: myStyle });
-   
-  const selected = "potato";
+export const Menu = (list, selected) =>
+  list.map(el => {
+    const {itemname} = el;
+    const {price} = el;
+ 
+    return <MenuItem text={itemname} key={itemname} price={price} selected={selected} />;
+  });
+ 
+ 
+const Arrow = ({ text, className }) => {
+  return (
+    <div
+      className={className}
+    >{text}</div>
+  );
+};
+ 
+ 
+const ArrowLeft = Arrow({ text: '<', className: 'arrow-prev' });
+const ArrowRight = Arrow({ text: '>', className: 'arrow-next' });
+ 
+const selected = 'item1';
+const menuItems = [];
+ 
+const frunveg = React.createRef();
+const staples = React.createRef();
+const snanam = React.createRef();
+const drinbev = React.createRef();
+const clenho = React.createRef();
+const beanhy = React.createRef();
 
-export class ItemNavigator extends React.Component {
+const scrollCat = (catRef) => {
 
+  switch(catRef) {
+    case 'frunveg':
+      window.scrollTo(0, frunveg.current.offsetTop);
+      break;
+    case 'staples':
+      window.scrollTo(0, staples.current.offsetTop);
+      break;
+      case 'snanam':
+        window.scrollTo(0, snanam.current.offsetTop);
+        break;
+        case 'drinbev':
+          window.scrollTo(0, drinbev.current.offsetTop);
+      break;
+      case 'clenho':
+        window.scrollTo(0, clenho.current.offsetTop);
+      break;
+      case 'beanhy':
+        window.scrollTo(0, beanhy.current.offsetTop);
+      break;
+    default:
+     console.log('lol');
+  }
+}
+
+class ItemNavigator extends Component {
   constructor(props) {
     super(props);
-    this.menuItems = Menu(items, selected);
+   
   }
-
+ 
+  
   state = {
-      selected
+    selected,
+    menuItems,
+    list
   };
-
+ 
   onSelect = key => {
-      this.setState({ selected: key });
+    this.setState({ selected: key });
   }
+
+  componentDidMount() {
+    Axios.get('http://localhost:5000/items/')
+      .then((res) => {
+          this.setState({list: res.data});
+          console.log(this.state.list);
+          this.setState({menuItems: Menu(this.state.list, selected)})
+        });
+  }
+
 
   
-
+  
+ 
+ 
   render() {
     const { selected } = this.state;
-    // Create menu from items
-    const menu = this.menuItems;
- 
+    const menu = this.state.menuItems;
+    const list = this.state.list;
+
     return (
-      <div className="card">
-        <ScrollMenu
-          data={menu}
-          arrowLeft={ArrowLeft}
-          arrowRight={ArrowRight}
-          selected={selected}
-          onSelect={this.onSelect}
-        />
-      </div>
+      <>
+      
+      <div className="cat-heading" ref={snanam}><div>The Snack Corner</div></div><hr className="cat-hr"/>
+        <div style={{  
+  backgroundImage: "url(" + Snanam + ")",
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat'
+}} className="scroller-div-hp">
+          <ScrollMenu
+            data={menu}
+            arrowLeft={ArrowLeft}
+            arrowRight={ArrowRight}
+            selected={selected}
+            onSelect={this.onSelect}
+          />
+        </div>
+
+        <div className="cat-heading" ref={frunveg}><div>Fruits and Vegetable Corner</div></div><hr className="cat-hr"/>
+        <div style={{  
+  backgroundImage: "url(" + Frunveg + ")",
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat'
+}} className="scroller-div-hp">
+          <ScrollMenu
+            data={menu}
+            arrowLeft={ArrowLeft}
+            arrowRight={ArrowRight}
+            selected={selected}
+            onSelect={this.onSelect}
+          />
+        </div>
+
+        <div className="cat-heading" ref={staples}><div>Your Daily Staples</div></div><hr className="cat-hr"/>
+        <div style={{  
+  backgroundImage: "url(" + Staples + ")",
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat'
+}} className="scroller-div-hp">
+          <ScrollMenu
+            data={menu}
+            arrowLeft={ArrowLeft}
+            arrowRight={ArrowRight}
+            selected={selected}
+            onSelect={this.onSelect}
+          />
+        </div>
+
+        <div className="cat-heading" ref={drinbev}><div>Drinks and Beverages</div></div><hr className="cat-hr"/>
+        <div style={{  
+  backgroundImage: "url(" + Drinks + ")",
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat'
+}} className="scroller-div-hp">
+          <ScrollMenu
+            data={menu}
+            arrowLeft={ArrowLeft}
+            arrowRight={ArrowRight}
+            selected={selected}
+            onSelect={this.onSelect}
+          />
+        </div>
+
+        <div className="cat-heading" ref={clenho}><div>Cleaning and Household</div></div><hr className="cat-hr"/>
+        <div style={{  
+  backgroundImage: "url(" + Cleaning + ")",
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat'
+}} className="scroller-div-hp">
+          <ScrollMenu
+            data={menu}
+            arrowLeft={ArrowLeft}
+            arrowRight={ArrowRight}
+            selected={selected}
+            onSelect={this.onSelect}
+          />
+        </div>
+
+        <div className="cat-heading" ref={beanhy}><div>Beauty and Hygiene</div></div><hr className="cat-hr"/>
+        <div style={{  
+  backgroundImage: "url(" + Beauty + ")",
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat'
+}} className="scroller-div-hp">
+          <ScrollMenu
+            data={menu}
+            arrowLeft={ArrowLeft}
+            arrowRight={ArrowRight}
+            selected={selected}
+            onSelect={this.onSelect}
+          />
+        </div>
+
+        <div className="cat-heading"><div>Season's Must-Haves</div></div><hr className="cat-hr"/>
+        <div style={{  
+  backgroundImage: "url(" + Festive + ")",
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat'
+}} className="scroller-div-hp">
+          <ScrollMenu
+            data={menu}
+            arrowLeft={ArrowLeft}
+            arrowRight={ArrowRight}
+            selected={selected}
+            onSelect={this.onSelect}
+          />
+        </div>
+  
+        
+
+      </>
     );
+    
   }
 }
 
 export default ItemNavigator;
+export {scrollCat};
